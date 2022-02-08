@@ -2,23 +2,25 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net/http"
 	"runtime"
-
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 func main() {
-	db, err := gorm.Open(mysql.Open("root:root@/task"), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
 
-	postId := make(chan int, 10)
-	go savePosts(db, postId)
-	go saveComments(db, postId)
+	var crud CrudMethods = &Post{}
+	saveAllPostsByUserId(crud, 1)
+	crud.DeleteById([]int{1})
+	crud.UpdateById(2, "body", "HI")
+
+	http.HandleFunc("/posts", AllPosts)
+	http.HandleFunc("/posts/post", GetPostById)     // ?id=...
+	http.HandleFunc("/comments", getCommentsByPost) // ?postid=...
+	http.HandleFunc("/xmlposts", xmlPost)
+	http.HandleFunc("/xmlposts/post", xmlPostById) // ?id=...
+	http.HandleFunc("/xmlcomments", xmlComByPost)  // ?postid=...
 
 	fmt.Println("Number of runnable goroutines: ", runtime.NumGoroutine())
-	var input string
-	fmt.Scanln(&input)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
