@@ -1,4 +1,4 @@
-package main
+package handle
 
 import (
 	"education/pkg/comment"
@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func getCommByPostjson(c echo.Context) error {
+func GetCommByPostIdjson(c echo.Context) error {
 	postId, _ := strconv.Atoi(c.QueryParam("postid"))
 
 	comm, err := comment.GetCommByPost(postId)
@@ -25,7 +25,7 @@ func getCommByPostjson(c echo.Context) error {
 	return c.JSONPretty(http.StatusOK, comm, " ")
 }
 
-func getCommByPostXml(c echo.Context) error {
+func GetCommByPostIdXml(c echo.Context) error {
 	postId, _ := strconv.Atoi(c.QueryParam("postid"))
 
 	comm, err := comment.GetCommByPost(postId)
@@ -44,7 +44,7 @@ func getCommByPostXml(c echo.Context) error {
 	return c.String(200, string(b))
 }
 
-func saveComm(c echo.Context) error {
+func SaveComm(c echo.Context) error {
 	postId, _ := strconv.Atoi(c.FormValue("postid"))
 	name := c.FormValue("name")
 	email := c.FormValue("email")
@@ -59,7 +59,7 @@ func saveComm(c echo.Context) error {
 	return c.JSON(http.StatusCreated, id)
 }
 
-func updateComm(c echo.Context) error {
+func UpdateCommById(c echo.Context) error {
 	id, _ := strconv.Atoi(c.FormValue("id"))
 	name := c.FormValue("name")
 	email := c.FormValue("email")
@@ -75,7 +75,7 @@ func updateComm(c echo.Context) error {
 	return c.NoContent(204)
 }
 
-func deleteComm(c echo.Context) error {
+func DeleteCommById(c echo.Context) error {
 	id, _ := strconv.Atoi(c.QueryParam("id"))
 	comm := comment.Comment{}
 	err := comm.DeleteComm(id)

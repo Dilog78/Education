@@ -1,4 +1,4 @@
-package main
+package handle
 
 import (
 	"education/pkg/post"
@@ -6,23 +6,22 @@ import (
 	"net/http"
 	"strconv"
 
+	_ "education/docs"
+
 	"github.com/labstack/echo/v4"
+	_ "github.com/swaggo/echo-swagger"
 )
 
-// ShowAccount godoc
-// @Summary      Show an account
-// @Description  get string by ID
-// @Tags         accounts
-// @Accept       json
+// CreateTodo godoc
+// @Summary      return post by id
+// @Tags root
 // @Produce      json
-// @Param        id   path      int  true  "Account ID"
-// @Success      200  {object}  model.Account
-// @Failure      400  {object}  httputil.HTTPError
-// @Failure      404  {object}  httputil.HTTPError
-// @Failure      500  {object}  httputil.HTTPError
-// @Router       /accounts/{id} [get]
+// @Param        id query string true "get postbyId"
+// @Success 204 {null} nil "Your message here"
+// @Failure      404   {string}   string  "ok"
+// @Router       /postjson [get]
 
-func getPostJson(c echo.Context) error {
+func GetPostJson(c echo.Context) error {
 	id, _ := strconv.Atoi(c.QueryParam("id"))
 
 	p := post.Post{}
@@ -35,7 +34,7 @@ func getPostJson(c echo.Context) error {
 	return c.JSONPretty(http.StatusOK, p, " ")
 }
 
-func getPostXml(c echo.Context) error {
+func GetPostXml(c echo.Context) error {
 	id, _ := strconv.Atoi(c.QueryParam("id"))
 
 	p := post.Post{}
@@ -48,7 +47,7 @@ func getPostXml(c echo.Context) error {
 	return c.XMLPretty(http.StatusOK, p, " ")
 }
 
-func getPostsJson(c echo.Context) error {
+func GetPostsJson(c echo.Context) error {
 	p, err := post.GetPosts()
 	if err != nil {
 		http.NotFound(c.Response(), c.Request())
@@ -58,7 +57,7 @@ func getPostsJson(c echo.Context) error {
 	return c.JSONPretty(http.StatusOK, p, " ")
 }
 
-func getPostsXml(c echo.Context) error {
+func GetPostsXml(c echo.Context) error {
 	p, err := post.GetPosts()
 	if err != nil {
 		http.NotFound(c.Response(), c.Request())
@@ -69,7 +68,7 @@ func getPostsXml(c echo.Context) error {
 	return c.String(http.StatusOK, string(b))
 }
 
-func createPost(c echo.Context) error {
+func CreatePost(c echo.Context) error {
 
 	userId, _ := strconv.Atoi(c.FormValue("userid"))
 	title := c.FormValue("title")
@@ -77,7 +76,7 @@ func createPost(c echo.Context) error {
 
 	var p post.Post = *post.NewPost(userId, title, body)
 
-	id, err := p.CreatePost()
+	id, err := p.Create()
 	if err != nil {
 		return err
 	}
@@ -85,7 +84,7 @@ func createPost(c echo.Context) error {
 	return c.JSON(http.StatusCreated, id)
 }
 
-func deletePostById(c echo.Context) error {
+func DeletePostById(c echo.Context) error {
 	id, _ := strconv.Atoi(c.QueryParam("id"))
 
 	p := post.Post{}
@@ -97,7 +96,7 @@ func deletePostById(c echo.Context) error {
 	return c.NoContent(204)
 }
 
-func updatePost(c echo.Context) error {
+func UpdatePostById(c echo.Context) error {
 	id, _ := strconv.Atoi(c.FormValue("ID"))
 	title := c.FormValue("Title")
 	body := c.FormValue("Body")

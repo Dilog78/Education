@@ -33,7 +33,7 @@ func GetPosts() ([]Post, error) {
 	return p, nil
 }
 
-func (p *Post) CreatePost() (int, error) {
+func (p *Post) Create() (int, error) {
 	db := pkg.InitDB()
 
 	if err := db.Table("posts").Create(&p).Error; err != nil {

@@ -1,8 +1,7 @@
 package main
 
 import (
-	"github.com/labstack/echo/v4"
-
+	echo "github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 
 	_ "education/docs"
@@ -22,9 +21,9 @@ func main() {
 
 	e := echo.New()
 
-	e.GET("/swagger/*", echoSwagger.WrapHandler)
-
 	routs(e)
+
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
