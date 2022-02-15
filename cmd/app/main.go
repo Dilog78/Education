@@ -2,7 +2,10 @@ package main
 
 import (
 	"github.com/labstack/echo/v4"
+
 	echoSwagger "github.com/swaggo/echo-swagger"
+
+	_ "education/docs"
 )
 
 // @title Post app with authorization
@@ -16,10 +19,12 @@ import (
 // @schemes http
 
 func main() {
+
 	e := echo.New()
 
-	routs(e)
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	routs(e)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

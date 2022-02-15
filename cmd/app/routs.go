@@ -3,7 +3,6 @@ package main
 import "github.com/labstack/echo/v4"
 
 func routs(e *echo.Echo) {
-
 	e.GET("/postjson", getPostJson)
 	e.GET("/postxml", getPostXml)
 	e.GET("/postsjson", getPostsJson)
@@ -19,5 +18,4 @@ func routs(e *echo.Echo) {
 
 	e.DELETE("/delete", deletePostById)
 	e.DELETE("/deletecomm", deleteComm)
-
 }
