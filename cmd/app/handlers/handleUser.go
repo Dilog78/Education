@@ -10,17 +10,17 @@ import (
 )
 
 func CreateUser(c echo.Context) error {
-	email := c.FormValue("email")
-	pass := c.FormValue("password")
+	db := pkg.InitDB()
+	u := auth.User{}
 
-	u := auth.User{
-		Email:    email,
-		Password: pass,
+	c.Bind(&u)
+
+	if err := db.Table("users").Where("email", u.Email).First(&u).Error; err == nil {
+		return c.String(http.StatusUnauthorized, "Email exist")
 	}
 
 	if err := u.Validator(); err != nil {
 		return echo.ErrBadRequest
-
 	}
 
 	h, err := u.HashPass()
@@ -34,20 +34,25 @@ func CreateUser(c echo.Context) error {
 		return err
 	}
 
-	u.Password = ""
+	tokenString, err := u.GenerateToken()
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
 
-	return c.JSONPretty(http.StatusCreated, u, " ")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"token": tokenString,
+	})
 }
 
 func SessionsUser(c echo.Context) error {
 	db := pkg.InitDB()
-	email := c.FormValue("email")
-	pass := c.FormValue("password")
 
-	u := auth.User{
-		Email:    email,
-		Password: pass,
-	}
+	u := auth.User{}
+
+	c.Bind(&u)
+
+	pass := u.Password
+
 	if err := db.Table("users").Where("email", u.Email).First(&u).Error; err != nil {
 		return echo.ErrUnauthorized
 	}
@@ -56,6 +61,12 @@ func SessionsUser(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 
-	u.Password = ""
-	return c.JSONPretty(http.StatusOK, u, " ")
+	tokenString, err := u.GenerateToken()
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"token": tokenString,
+	})
 }

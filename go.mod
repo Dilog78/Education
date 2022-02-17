@@ -3,7 +3,7 @@ module education
 go 1.17
 
 require (
-	github.com/labstack/echo/v4 v4.6.3
+	github.com/labstack/echo/v4 v4.4.0
 	github.com/swaggo/swag v1.7.9
 	gorm.io/driver/mysql v1.2.3
 	gorm.io/gorm v1.22.5
@@ -26,6 +26,7 @@ require (
 )
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
