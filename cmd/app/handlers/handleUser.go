@@ -2,7 +2,7 @@ package handle
 
 import (
 	"education/pkg"
-	"education/pkg/auth"
+	auth "education/pkg/user"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -11,6 +11,7 @@ import (
 
 func CreateUser(c echo.Context) error {
 	db := pkg.InitDB()
+
 	u := auth.User{}
 
 	c.Bind(&u)
@@ -33,18 +34,11 @@ func CreateUser(c echo.Context) error {
 	if err := u.Save(); err != nil {
 		return err
 	}
-
-	tokenString, err := u.GenerateToken()
-	if err != nil {
-		return echo.ErrUnauthorized
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"token": tokenString,
-	})
+	u.Password = ""
+	return c.JSON(http.StatusCreated, u)
 }
 
-func SessionsUser(c echo.Context) error {
+func SignIn(c echo.Context) error {
 	db := pkg.InitDB()
 
 	u := auth.User{}
@@ -66,7 +60,5 @@ func SessionsUser(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"token": tokenString,
-	})
+	return c.JSON(http.StatusOK, echo.Map{"token": tokenString})
 }

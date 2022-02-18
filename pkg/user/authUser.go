@@ -2,6 +2,7 @@ package auth
 
 import (
 	"education/pkg"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -10,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const mySigningKey = "Al#%lYrsdgerou453342rB&^%ase"
+var MySigningKey []byte = []byte("ujjghdgm")
 
 type User struct {
 	ID       int    `json:"id"`
@@ -21,11 +22,12 @@ type User struct {
 
 func (u *User) GenerateToken() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
-		ExpiresAt: time.Now().Add(10 * time.Minute).Unix(),
+		Id:        strconv.Itoa(u.ID),
+		ExpiresAt: time.Now().Add(5 * time.Minute).Unix(),
 		IssuedAt:  time.Now().Unix(),
 	})
 
-	return token.SignedString([]byte(mySigningKey))
+	return token.SignedString(MySigningKey)
 }
 
 func (u *User) Validator() error {

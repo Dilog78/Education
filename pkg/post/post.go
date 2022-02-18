@@ -21,12 +21,12 @@ func (p *Post) GetPost(id int) (Post, error) {
 	return *p, nil
 }
 
-func GetPosts() ([]Post, error) {
+func GetPosts(id string) ([]Post, error) {
 	db := pkg.InitDB()
 
 	var p []Post
 
-	if err := db.Table("posts").Find(&p).Error; err != nil {
+	if err := db.Table("posts").Where("user_id", id).Find(&p).Error; err != nil {
 		return p, err
 	}
 

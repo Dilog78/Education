@@ -7,6 +7,7 @@ import (
 )
 
 func routs(e *echo.Echo) {
+
 	e.GET("/postjson", handle.GetPostJson)
 	e.GET("/postxml", handle.GetPostXml)
 	e.GET("/postsjson", handle.GetPostsJson)
@@ -17,7 +18,7 @@ func routs(e *echo.Echo) {
 	e.POST("/createcomm", handle.SaveComm)
 	e.POST("/create", handle.CreatePost)
 	e.POST("/createuser", handle.CreateUser)
-	e.POST("/session", handle.SessionsUser)
+	e.POST("/signin", handle.SignIn)
 
 	e.PUT("/update", handle.UpdatePostById)
 	e.PUT("/updatecomm", handle.UpdateCommById)

@@ -1,8 +1,10 @@
 package handle
 
 import (
+	middleware "education/pkg/jwtMiddleware"
 	"education/pkg/post"
 	"encoding/xml"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -48,7 +50,13 @@ func GetPostXml(c echo.Context) error {
 }
 
 func GetPostsJson(c echo.Context) error {
-	p, err := post.GetPosts()
+
+	id, err := middleware.ParseAuth(c)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	p, err := post.GetPosts(id)
 	if err != nil {
 		http.NotFound(c.Response(), c.Request())
 		return err
@@ -58,7 +66,11 @@ func GetPostsJson(c echo.Context) error {
 }
 
 func GetPostsXml(c echo.Context) error {
-	p, err := post.GetPosts()
+	id, err := middleware.ParseAuth(c)
+	if err != nil {
+		log.Fatal(err)
+	}
+	p, err := post.GetPosts(id)
 	if err != nil {
 		http.NotFound(c.Response(), c.Request())
 		return err
