@@ -8,6 +8,10 @@ import (
 
 func routs(e *echo.Echo) {
 
+	e.GET("/", handle.Login)
+	e.GET("/googleauth", handle.GoogleAuth)
+	e.GET("/callback", handle.GoogleCallback)
+
 	e.GET("/postjson", handle.GetPostJson)
 	e.GET("/postxml", handle.GetPostXml)
 	e.GET("/postsjson", handle.GetPostsJson)

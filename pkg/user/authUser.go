@@ -15,15 +15,15 @@ var MySigningKey []byte = []byte("ujjghdgm")
 
 type User struct {
 	ID       int    `json:"id"`
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
+	Email    string `json:"email" form:"email" query:"email"`
+	Password string `json:"password" form:"password" query:"password"`
 	Hash     string `json:"-"`
 }
 
 func (u *User) GenerateToken() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Id:        strconv.Itoa(u.ID),
-		ExpiresAt: time.Now().Add(5 * time.Minute).Unix(),
+		ExpiresAt: time.Now().Add(15 * time.Minute).Unix(),
 		IssuedAt:  time.Now().Unix(),
 	})
 
